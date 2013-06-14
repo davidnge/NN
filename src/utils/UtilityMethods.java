@@ -4,59 +4,38 @@
  */
 package utils;
 
-import structs.Vector;
+import org.apache.commons.math3.linear.ArrayRealVector;
 
 /**
  *
  * @author ngecheekeen
  */
 public class UtilityMethods {
-    
-    public UtilityMethods()
+     
+    /** 
+     * Find the Euclidean distance between node(x1,y1) and node(x2,y2) in the lattice
+     * 
+     * @param           x1,y1,x2,y2 
+     * @return          distance between 2 nodes' weight vector
+     */
+    public double euclideanDist(int x1, int x2, int y1, int y2)
     {
-        
+        return Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
     }
     
-    public double norm(Vector v)
+    /** 
+     * Normalize the ArrayRealVector
+     * 
+     * @param           An ArrayRealVector
+     * @return          Normalized ArrayRealVector
+     */
+    public ArrayRealVector normalization (ArrayRealVector v)
     {
-        double temp[] = v.getVector();
-        double normValue = 0.0;
-        
-        
-        for(int i = 0; i < temp.length; i++)
+        for (int i=0; i<v.getDimension(); i++)
         {
-            normValue += Math.pow(temp[i],2);
-        }
-        
-        return Math.sqrt(normValue);
-    }
-    
-    public Vector normalization(Vector v)
-    {
-        double normValue = norm(v);
-        double temp[] = v.getVector();
-        
-        for(int i=0; i < temp.length; i++)
-        {
-            temp[i] = temp[i]/normValue;
-            v.ELEMENTS[i] = temp[i];
+            v.setEntry(i, (v.getEntry(i)/v.getNorm()));
         }
         
         return v;
     }
-    
-    public double multiply(Vector v, Vector u)
-    {
-        double cummulativeValue = 0.0;
-        
-        if(v.DIMENSIONS == u.DIMENSIONS)
-        {
-            for(int i = 0; i < v.DIMENSIONS; i++)
-            {
-               cummulativeValue += v.ELEMENTS[i]*u.ELEMENTS[i];
-            }
-        }
-        return cummulativeValue;
-    }
-    
 }

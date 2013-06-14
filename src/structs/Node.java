@@ -6,6 +6,7 @@ package structs;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import org.apache.commons.math3.linear.ArrayRealVector;
 
 /**
  *
@@ -13,18 +14,29 @@ import java.util.StringTokenizer;
  */
 public class Node {
 
-    Vector WEIGHT_VECTOR = null;
+    //Vector WEIGHT_VECTOR = null;
+    ArrayRealVector WEIGHT_VECTOR;
 
     public Node(int Dimension)
     {
-        WEIGHT_VECTOR = new Vector(Dimension);
-        WEIGHT_VECTOR.initializeWeights();  
+        WEIGHT_VECTOR = new ArrayRealVector(Dimension);
+        for(int i = 0 ; i < WEIGHT_VECTOR.getDimension() ; i++)
+        {
+           
+            WEIGHT_VECTOR.setEntry(i, Math.random());
+        }  
     }
  
-    public Vector getWeights()
+    public ArrayRealVector getWeights()
     {
-        return this.WEIGHT_VECTOR;
+        return WEIGHT_VECTOR;
     }
     
+    public void setWeights(ArrayRealVector v)
+    {
+        this.WEIGHT_VECTOR = v;
+    }
+    
+
     
 }

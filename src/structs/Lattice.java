@@ -17,13 +17,13 @@ public class Lattice {
     public Lattice (int width, int height, int Dimension)
     {
         
-        SOM = new Node[width][height];
-        SOMHEIGHT = width;
-        SOMWIDTH = height;
+        SOM = new Node[height][width];
+        SOMHEIGHT = height;
+        SOMWIDTH = width;
         
-        for (int i = 0; i<width; i++)
+        for (int i = 0; i<height; i++)
         {
-            for (int j = 0; j<height; j++)
+            for (int j = 0; j<width; j++)
             {  
                  
                 SOM[i][j] = new Node(Dimension); 

@@ -21,8 +21,7 @@ public class LatticeRenderer extends JPanel {
     BufferedImage img;
     double HIGHESTNODE;
     double SMALLESTNODE;
-    //double [][] Umatrix;
-    //private int jpg;
+
 
     @Override
     public void paintComponent (Graphics g)
@@ -45,36 +44,67 @@ public class LatticeRenderer extends JPanel {
     }
 
     /** 
-     * Render the following Matrix: UMatrix, 4-Neighbours & 8-Neighbours
+     * Render the following Matrix: UMatrix, 4-Neighbours & 8-Neighbours on JPanel
      * 
      * @param           int x, int y
      * @void            render UMatrix, 4-Neighbours or 8-Neighbours Lattice           
      */ 
-    public void renderMatrix(double [][] umatrix)
+    public void renderMatrix(double [][] matrix)
     {
-                float cellWidth = (float)getWidth() / (float)umatrix.length;
-		float cellHeight = (float)getHeight() / (float)umatrix[0].length;
+                float cellWidth = (float)getWidth() / (float)matrix.length;
+		float cellHeight = (float)getHeight() / (float)matrix[0].length;
 		
 		int imgW = img.getWidth();
 		int imgH = img.getHeight();
 		Graphics2D g2 = img.createGraphics();
 		g2.setBackground(Color.DARK_GRAY);
 		g2.clearRect(0,0,imgW,imgH);
-		for (int x=0; x<umatrix.length; x++) {
-			for (int y=0; y<umatrix[0].length; y++) {
-                            FindLargestandSmallestNode(umatrix);
+		for (int x=0; x<matrix.length; x++) {
+			for (int y=0; y<matrix[0].length; y++) {
+                            FindRange(matrix);
                             double range = HIGHESTNODE-SMALLESTNODE;
-                            if(umatrix[x][y]<=0.2*range)
-                                g2.setColor(Color.WHITE);
-                            else if(umatrix[x][y]>0.2*range && umatrix[x][y]<0.4*range)
-                                g2.setColor(Color.cyan);
-                            else if(umatrix[x][y]>=0.4*range && umatrix[x][y]<0.6*range)
+                            
+                            Color gray1 = new Color(60,60,60);
+                            Color gray2 = new Color(80,80,80);
+                            Color gray3 = new Color(100,100,100);
+                            Color gray4 = new Color(120,120,120);
+                            Color gray5 = new Color(140,140,140);
+                            Color gray6 = new Color(160,160,160);
+                            Color gray7 = new Color(180,180,180);
+                            Color gray8 = new Color(200,200,200);
+                            Color gray9 = new Color(225,225,225);
+                            Color gray10 = new Color(255,255,255);
+                            
+                            
+                            if(matrix[x][y]<=0.1*range)
+                                g2.setColor(Color.darkGray);
+                            else if(matrix[x][y]>0.1*range && matrix[x][y]<0.2*range)
+                                g2.setColor(gray4);
+                            else if(matrix[x][y]>=0.2*range && matrix[x][y]<0.3*range)
+                                g2.setColor(gray5);
+                            else if(matrix[x][y]>=0.3*range && matrix[x][y]<=0.4*range)
+                                g2.setColor(gray6);
+                            else if(matrix[x][y]>=0.4*range && matrix[x][y]<=0.5*range)
+                                g2.setColor(gray7);
+                            else if(matrix[x][y]>=0.5*range && matrix[x][y]<=0.6*range)
+                                g2.setColor(gray8);
+                            else if(matrix[x][y]>=0.6*range && matrix[x][y]<=0.7*range)
+                                g2.setColor(gray9);
+                            else if (matrix[x][y]> 0.7*range)
+                                g2.setColor(gray10);
+                            
+                            /**
+                            if(matrix[x][y]<=0.2*range)
+                                g2.setColor(Color.darkGray);
+                            else if(matrix[x][y]>0.2*range && matrix[x][y]<0.4*range)
+                                g2.setColor(s);
+                            else if(matrix[x][y]>=0.4*range && matrix[x][y]<0.6*range)
                                 g2.setColor(Color.MAGENTA);
-                            else if(umatrix[x][y]>=0.6*range && umatrix[x][y]<=0.8*range)
+                            else if(matrix[x][y]>=0.6*range && matrix[x][y]<=0.8*range)
                                 g2.setColor(Color.ORANGE);
-                            else if (umatrix[x][y]> 0.8*range)
+                            else if (matrix[x][y]> 0.8*range)
                                 g2.setColor(Color.red);
-
+                                **/
                             g2.fillRect((int)(x*cellWidth),(int)(y*cellHeight),(int)cellWidth+1, (int)cellHeight+1);
 			}
 		}
@@ -84,7 +114,11 @@ public class LatticeRenderer extends JPanel {
     }
     
     /** 
-     * Get element of fourMatrix at coordinate (x,y)
+     * Render the Winner Node plot on JPanel
+     * Initial color for winner node (255,255,255). 
+     * For each repeating winner node, the value is decremented starting from b,
+     * then g, then r in the palette (r,g,b).
+     * Total possible color to color the winner nodes: 16,581,375 (255x255x255)
      * 
      * @param           2D array
      * @void            render Winner Node Lattice         
@@ -115,7 +149,7 @@ public class LatticeRenderer extends JPanel {
                      int b=255;
                      
                      int temp1 = xMatrix[x][y]/255;
-                     int temp2 = xMatrix[x][y]%255;
+                     int temp2 = xMatrix[x][y]%255;        
                      int temp3 = xMatrix[x][y]%65025;
                      
                      if (temp1 >=1 && temp1<255)
@@ -140,20 +174,7 @@ public class LatticeRenderer extends JPanel {
                          g = g - (temp3/255);
                          r = r- temp3;
                      }
-                     /**
-                     b = b - xMatrix[x][y];
-                     if(b<=0)
-                     {
-                         b = 0;
-                         g = g - (xMatrix[x][y]-255);
-                         
-                         if (g<=0)
-                         {
-                             g = 0;
-                             r = r - (xMatrix[x][y] - 255 - 255);
-                         }             
-                     }**/
-        
+
                     Color rgb = new Color (r,g,b);
                     g2.setColor(rgb);    
                 }
@@ -174,7 +195,7 @@ public class LatticeRenderer extends JPanel {
      * @param           2D Array
      * @void            set HIGHESTNODE and SMALLESTNODE values           
      */ 
-    public void FindLargestandSmallestNode(double [][] umat)
+    public void FindRange(double [][] umat)
     {
          HIGHESTNODE = umat[0][0];
          SMALLESTNODE = umat[0][0];

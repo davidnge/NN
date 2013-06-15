@@ -12,14 +12,11 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 public class EightNeighbour {
     
     double [][] eightMatrix;
-    ArrayRealVector tempSOM  [][];
     
     public EightNeighbour(Lattice lattice)
     {
-        tempSOM  = new ArrayRealVector [lattice.getSOMHEIGHT()][lattice.getSOMWIDTH()];
-        eightMatrix = new double [(lattice.getSOMHEIGHT())][(lattice.SOMWIDTH)];
+        eightMatrix = new double [(lattice.getSOMHEIGHT())][(lattice.getSOMWIDTH())];
         renderEightNeighbour(lattice);
-        
     }
     
     /** 
@@ -69,7 +66,7 @@ public class EightNeighbour {
                 eightMatrix[i][j] = (latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i,j-1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j-1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j+1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i,j+1).getWeights()))/5;
 
                 //calculate average of all of its 8 immediate neighbours
-                else if(i-1>0 && j-1>0 && i+1<eightMatrix.length-1 && j+1<eightMatrix[0].length-1)
+                else if(i>0 && j>0 && i<eightMatrix.length-1 && j<eightMatrix[0].length-1)
                 eightMatrix[i][j] = (latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i-1,j).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i-1,j-1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i,j-1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j-1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i+1,j+1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i, j+1).getWeights()) + latticeInput.getNode(i, j).getWeights().getDistance(latticeInput.getNode(i-1,j+1).getWeights()))/8;
 
             }

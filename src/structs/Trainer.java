@@ -29,6 +29,7 @@ public class Trainer implements ActionListener{
     static int yPositionOfLargestNode = 0;
     static int countIteration;
     static ArrayRealVector normalizedVector;
+    static final int TOTALITERATION = 500;
     
     static Lattice lattice;
     static String file;
@@ -80,23 +81,20 @@ public class Trainer implements ActionListener{
                
                     //read all lines from input file
                     while((LINE = br.readLine()) != null) 
-                    {
-                        
+                    {                        
                        //  create ArrayRealVector from input vector 
                        double [] tempVector = InitializeVector(LINE);  
-                       
                        v = new ArrayRealVector(tempVector); 
                         
                        //Normalize vector before dot product operation
                        normalizedVector = (new UtilityMethods().normalization(v));
-                      // System.out.println(normalizedVector);
-                             // iterate all nodes in lattice
+
+                             // dot product operations, iterate all nodes in lattice
                              for (int i = 0; i<lattice.getSOMHEIGHT(); i++)
                               {
                                   for (int j = 0; j<lattice.getSOMWIDTH(); j++)
                                   { 
                                       tempOUTPUTSOM[i][j] = normalizedVector.dotProduct(lattice.getNode(i, j).getWeights());
-                                      //System.out.println("here"+tempOUTPUTSOM[i][j]);
                                   }
                               }
                               
@@ -105,7 +103,6 @@ public class Trainer implements ActionListener{
                               
                               //visualization for different functions 
                               Function(r,functionSelected);
-                 
                     }     
                }catch(Exception e)
               {}
@@ -132,7 +129,6 @@ public class Trainer implements ActionListener{
                 if (tempOUTPUTSOM[i][j]>HIGHESTNODE)
                 {
                     HIGHESTNODE = tempOUTPUTSOM[i][j];
-                    System.out.println(HIGHESTNODE);
                     xPositionOfLargestNode = i;
                     yPositionOfLargestNode = j;                    
                 }
@@ -215,7 +211,7 @@ public class Trainer implements ActionListener{
                 IterateMinHeight = xPositionOfLargestNode- (int)upperRad;
             }
             
-            if((xPositionOfLargestNode+upperRad)>lattice.SOMHEIGHT)
+            if((xPositionOfLargestNode+upperRad)>lattice.getSOMHEIGHT())
             {
                 IterateMaxHeight = lattice.getSOMHEIGHT();
             }
@@ -250,17 +246,15 @@ public class Trainer implements ActionListener{
                      if (new UtilityMethods().euclideanDist(xPositionOfLargestNode, k, yPositionOfLargestNode, l) <= rad)
                      {
                          // new weight vector defined
-                         double theta = Math.exp(1)*((- new UtilityMethods().euclideanDist(xPositionOfLargestNode, k, yPositionOfLargestNode, l))/(2*Math.pow(rad, 2)*countIteration));
-                         ArrayRealVector newWeight = lattice.getNode(k, l).getWeights().add((normalizedVector.subtract(lattice.getNode(k, l).getWeights()).mapMultiply(learningRate).mapMultiply(theta))); 
-                         
+                         double theta = Math.exp((- new UtilityMethods().euclideanDist(xPositionOfLargestNode, k, yPositionOfLargestNode, l))/(2*Math.pow(rad, 2)*countIteration));
+                         ArrayRealVector newWeight = lattice.getNode(k, l).getWeights().add((normalizedVector.subtract(lattice.getNode(k, l).getWeights()).mapMultiply(learningRate*theta))); 
                          lattice.getNode(k,l).setWeights(newWeight);
                      }
                 }
             }
             
            // Decay radius after each iteration
-           rad = rad*Math.exp(-countIteration/(500/Math.log(Math.max(lattice.getSOMHEIGHT(), lattice.getSOMWIDTH()))));
-           //System.out.println(rad);
+           rad = rad*Math.exp(-countIteration/(TOTALITERATION/Math.log(Math.max(lattice.getSOMHEIGHT(), lattice.getSOMWIDTH()))));
     }
     
     /** 
@@ -286,7 +280,7 @@ public class Trainer implements ActionListener{
                    tempOUTPUTuMat[i][j] = Umat.getUMatrixElement(i, j);
                }
             }
-                             
+       
            r.renderMatrix(tempOUTPUTuMat);
         }
         
@@ -294,17 +288,14 @@ public class Trainer implements ActionListener{
         {
             
             winner.registerWinner(xPositionOfLargestNode, yPositionOfLargestNode);
-           
-            
+   
             int [][] tempOUTPUTWinner = new int [lattice.getSOMHEIGHT()][lattice.getSOMWIDTH()];
 
             for (int i=0; i<lattice.getSOMHEIGHT(); i++)
             {
                 for (int j=0; j<lattice.getSOMWIDTH(); j++)
-                {
-                     
+                {           
                      tempOUTPUTWinner[i][j] = winner.getValue(i, j);
-
                 }
             }
             
@@ -315,10 +306,10 @@ public class Trainer implements ActionListener{
         {
             FourNeighbour four = new FourNeighbour(lattice);
             
-            double [][] tempOUTPUTfour = new double[lattice.getSOMWIDTH()][lattice.getSOMHEIGHT()];
-            for (int i=0; i<lattice.getSOMWIDTH(); i++)
+            double [][] tempOUTPUTfour = new double[lattice.getSOMHEIGHT()][lattice.getSOMWIDTH()];
+            for (int i=0; i<lattice.getSOMHEIGHT(); i++)
             {
-                for (int j=0; j<lattice.getSOMHEIGHT(); j++)
+                for (int j=0; j<lattice.getSOMWIDTH(); j++)
                 {
                     tempOUTPUTfour [i][j] = four.getFourMatrixElement(i, j);
                 }
@@ -352,7 +343,7 @@ public class Trainer implements ActionListener{
            System.out.println(countIteration);
            
        //total iterations = 500
-       if (countIteration > 500)
+       if (countIteration > TOTALITERATION)
        {
           System.exit(1); 
        }

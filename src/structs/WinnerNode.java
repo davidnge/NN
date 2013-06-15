@@ -14,7 +14,7 @@ public class WinnerNode {
     
     public WinnerNode(Lattice latticeInput)
     {
-        winnerMatrix = new int [latticeInput.getSOMWIDTH()][latticeInput.SOMHEIGHT];
+        winnerMatrix = new int [latticeInput.getSOMHEIGHT()][latticeInput.getSOMWIDTH()];
         initializeWinnerMatrix();
     }
     
